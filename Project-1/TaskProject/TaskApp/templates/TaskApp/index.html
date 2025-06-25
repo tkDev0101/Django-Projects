@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Task Manager</title>
+    <style>
+        li.completed {
+            text-decoration: line-through;
+            color: gray;
+        }
+    </style>
+</head>
+<body>
+
+<h1>📝 TK's Task Manager</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    <input type="text" name="task" placeholder="Enter a new task" required>
+    <button type="submit">Add Task</button>
+</form>
+
+<hr>
+
+<h2>📋 Your Tasks</h2>
+<ul>
+    {% for task in tasks %}
+        <li class="{% if task.completed %}completed{% endif %}">
+            {{ task.name }}
+            <a href="{% url 'complete_task' task.id %}">
+                {% if task.completed %}✔ Undo{% else %}✅ Complete{% endif %}
+            </a>
+            |
+            <a href="{% url 'delete_task' task.id %}">🗑 Delete</a>
+        </li>
+    {% empty %}
+        <li>No tasks yet.</li>
+    {% endfor %}
+</ul>
+
+</body>
+</html>
