@@ -21,5 +21,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('TaskApp.urls')),  # now / points DIRECTLY to your task app
+    path('', include('TaskApp.urls')),  # now / points DIRECTLY to the 'TaskApp' app
 ]
