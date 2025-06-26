@@ -1,0 +1,221 @@
+-----------------------------------------------
+🔨 Phase 0: Set-Up Virtual Environment && Install Django
+
+ - Open your terminal or command prompt.
+ - Navigate to the folder where you want to create your project.
+
+
+check python version
+  • python --version
+
+Create a virtual environment:
+  • python -m venv env
+  • source env/bin/activate   ||   .\env\Scripts\activate
+
+install Django using pip, Python’s package manager
+  • pip install django   ||   python -m pip install django
+
+check django version
+  • python -m django --version
+
+
+-----------------------------------------------
+🛠️ Phase 1: Project Setup
+
+1. Create the Django Project
+  • django-admin startproject project_name
+  • cd project_name
+
+2. Create the App
+  • python manage.py startapp app_name
+
+3. Register the App in settings.py
+In project_name/settings.py, find INSTALLED_APPS and add:
+  • 'app_name',
+
+4. Run Initial Setup
+  • python manage.py migrate
+  • python manage.py runserver
+
+Go to http://127.0.0.1:8000 and confirm it works ✅
+
+
+-----------------------------------------------
+🔧 Phase 2: Set Up URLs, Views, and Templates
+
+
+1. Create a urls.py file inside your tasks/ app folder:
+  • touch app_name/urls.py
+
+
+2. In app_name/urls.py add:
+
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('', views.index, name='index'),
+]
+
+
+3. In project_name/urls.py:
+
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('app_name.urls')),  # now / points directly to your task app
+]
+
+
+4. In app_name/views.py add this:
+
+from django.shortcuts import render
+from django.http import HttpResponse
+
+def index(request):
+    return HttpResponse("Hello, welcome to your Task Manager!")
+
+
+✅ Test It:
+Visit: http://127.0.0.1:8000/
+
+🚀 What’s Next?
+
+
+-----------------------------------------------
+✅ Phase 3: Templates + Form + Database Model
+
+1. Create Template Folder for HTML Pages 📁 
+ 
+Inside your app iTaskApp, create:
+  • mkdir -p iTaskApp/templates/iTaskApp
+  • touch iTaskApp/templates/iTaskApp/index.html
+
+Django will look for templates inside templates/iTaskApp/ by default when using render(request, "iTaskApp/index.html").
+
+
+2. Update the View to Render the Template ✍️ 
+
+In iTaskApp/views.py:
+
+from django.shortcuts import render
+
+def index(request):
+    return render(request, "iTaskApp/index.html")
+
+
+3. Add Basic HTML to index.html 💻 
+
+In iTaskApp/templates/iTaskApp/index.html:
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Task Manager</title>
+</head>
+<body>
+
+    <h1>📝 Task Manager</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        <input type="text" name="task" placeholder="Enter a new task" required>
+        <button type="submit">Add Task</button>
+    </form>
+
+    <hr>
+
+    <h2>📋 Your Tasks</h2>
+    <ul>
+        {% for task in tasks %}
+            <li>{{ task.name }}</li>
+        {% empty %}
+            <li>No tasks yet.</li>
+        {% endfor %}
+    </ul>
+
+</body>
+</html>
+
+
+4. Create a Task Model 🧱 
+
+In iTaskApp/models.py:
+
+from django.db import models
+
+class Task(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+        
+Then run the migrations:
+  • python manage.py makemigrations
+  • python manage.py migrate
+
+
+5. Handle Form Submission in views.py 📥 
+
+Update index() in iTaskApp/views.py:
+
+from django.shortcuts import render, redirect
+from .models import Task
+
+def index(request):
+    if request.method == 'POST':
+        task_name = request.POST.get('task')
+        if task_name:
+            Task.objects.create(name=task_name)
+        return redirect('/')  # refresh the page to show new task
+
+    tasks = Task.objects.all()
+    return render(request, "iTaskApp/index.html", {"tasks": tasks})
+
+
+6. Test It 🧪 
+
+Now go to: http://127.0.0.1:8000/ 
+
+✅ Try adding tasks
+✅ See them listed immediately
+✅ Try refreshing to confirm persistence
+
+
+✅ Summary So Far
+
+You’ve now:
+
+  • Rendered HTML templates using Django
+  • Used a basic HTML form
+  • Built your first Django model (database-backed)
+  • Saved and displayed tasks
+  • Protected your form with CSRF token
+  • Implemented the T (Template), V (View), and M (Model) in Django's MTV architecture
+
+
+🎨 🗑 ✅🎯 Next: Want to Add Complete/Remove Task Functionality?
+
+
+
+============================================================================================
+6. Django Admin Panel
+
+Create a superuser and access the admin panel at /admin.
+  • python manage.py createsuperuser
+
+- Use Django’s admin interface to add and manage items. 
+- Register the model in admin.py :
+
+_______________________________________
+from django.contrib import admin                       
+from .models import model_name                                        
+                                                                                           
+admin.site.register(model_name)                                      
+
+
+
+
