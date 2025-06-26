@@ -1,7 +1,27 @@
-<h2>Login</h2>
-<form method="POST">
+{% extends "TaskApp/base.html" %}
+{% block content %}
+
+{% load widget_tweaks %}
+
+
+<h2 class="mb-4">🔐 Login</h2>
+
+<form method="POST" class="col-md-6 mx-auto">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Login</button>
+    {{ form.non_field_errors }}
+
+    <div class="mb-3">
+        <label class="form-label">Username</label>
+        {{ form.username|add_class:"form-control" }}
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Password</label>
+        {{ form.password|add_class:"form-control" }}
+    </div>
+
+    <button type="submit" class="btn btn-success">Login</button>
+    <a href="/register/" class="btn btn-link">Don't have an account? Register</a>
 </form>
-<p>Don't have an account? <a href="/register/">Register here</a></p>
+
+{% endblock %}

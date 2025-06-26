@@ -7,6 +7,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib import messages
 
+from django.http import HttpResponseForbidden
 
 # def index(request):
 #     return HttpResponse("Hello, welcome to your Task Manager!")
@@ -14,18 +15,46 @@ from django.contrib import messages
 
 
 
-
 @login_required(login_url="/login/")
 def index(request):
-
     if request.method == 'POST':
         task_name = request.POST.get('task')
+        due_date = request.POST.get('due_date') or None
+        priority = request.POST.get('priority') or 'Medium'
+
         if task_name:
-            Task.objects.create(name=task_name, user=request.user)
+            Task.objects.create(
+                name=task_name,
+                user=request.user,
+                due_date=due_date,
+                priority=priority
+            )
         return redirect('/')
 
-    tasks = Task.objects.filter(user=request.user)
+    tasks = Task.objects.filter(user=request.user).order_by('completed', 'due_date')
     return render(request, "TaskApp/index.html", {"tasks": tasks})
+
+
+
+
+@login_required(login_url="/login/")
+def edit_task(request, task_id):
+    task = get_object_or_404(Task, id=task_id)
+
+    # Ensure users can only edit their own tasks
+    if task.user != request.user:
+        return HttpResponseForbidden("You are not allowed to edit this task.")
+
+    if request.method == 'POST':
+        new_name = request.POST.get('name')
+        if new_name:
+            task.name = new_name
+            task.save()
+            return redirect('/')
+    
+    return render(request, 'TaskApp/edit.html', {'task': task})
+
+
 
 
 def complete_task(request, task_id):
@@ -43,6 +72,8 @@ def delete_task(request, task_id):
 
 
 
+
+# ------------------ Login / Register / Logout ------------------ #
 
 def register_view(request):
     if request.method == 'POST':
