@@ -1,0 +1,340 @@
+
+===============================================================================
+Django-Setup - PRAC 
+-----------------------------------------------------
+
+🔨 Phase 0: Set-Up Virtual Environment && Install Django
+
+ - Open your terminal or command prompt.
+ - Navigate to the folder where you want to create your project.
+
+
+check python version
+  • python --version
+
+Create a virtual environment:
+  • python -m venv env
+  • source env/bin/activate   ||   .\env\Scripts\activate
+
+install Django using pip, Python’s package manager
+  • pip install django   ||   python -m pip install django
+
+check django version
+  • python -m django --version
+
+
+-----------------------------------------------
+🛠️ Phase 1: Project Setup
+
+1. Create the Django Project
+  • django-admin startproject project_name
+  • cd project_name
+
+2. Create the App
+  • python manage.py startapp app_name
+
+3. Register the App in settings.py
+In project_name/settings.py, find INSTALLED_APPS and add:
+  • 'app_name',
+
+4. Run Initial Setup
+  • python manage.py migrate
+  • python manage.py runserver
+
+Go to http://127.0.0.1:8000 and confirm it works ✅
+
+
+-----------------------------------------------
+🔧 Phase 2: Set Up URLs, Views, and Templates
+
+
+1. Create a urls.py file inside your tasks/ app folder:
+  • touch app_name/urls.py
+
+
+2. In app_name/urls.py add:
+_________________________________________________
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('', views.index, name='index'),
+]
+__________________________________________________
+
+
+3. Add app url
+
+In Main Project Url - Add App Url 
+  • path('demoapp2/', include('demoapp2.urls')),                                                                           
+
+In project_name/urls.py:
+__________________________________________________
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('app_name.urls')),  # now / points directly to your task app
+]
+__________________________________________________
+
+
+4. In app_name/views.py add this:
+__________________________________________________
+from django.shortcuts import render
+from django.http import HttpResponse
+
+def index(request):
+    return HttpResponse("Hello, welcome to your Task Manager!")
+__________________________________________________
+
+
+5. ✅ Test It:
+Visit: http://127.0.0.1:8000/
+
+
+
+
+-----------------------------------------------
+✅ Phase 3: Templates + Form
+
+1. Create Template Folder for HTML Pages 📁 
+ 
+Inside your app iTaskApp, create:
+  • mkdir -p iTaskApp/templates/iTaskApp
+  • touch iTaskApp/templates/iTaskApp/index.html
+
+Django will look for templates inside templates/iTaskApp/ by default when using render(request, "iTaskApp/index.html").
+
+
+2. Update the View to Render the Template ✍️ 
+
+In iTaskApp/views.py:
+__________________________________________________
+from django.shortcuts import render
+
+def index(request):
+    return render(request, "iTaskApp/index.html")
+__________________________________________________
+
+
+3. Add Basic HTML to index.html 💻 
+
+In iTaskApp/templates/iTaskApp/index.html:
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Task Manager</title>
+</head>
+<body>
+
+    <h1>📝 Task Manager</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        <input type="text" name="task" placeholder="Enter a new task" required>
+        <button type="submit">Add Task</button>
+    </form>
+
+    <hr>
+
+    <h2>📋 Your Tasks</h2>
+    <ul>
+        {% for task in tasks %}
+            <li>{{ task.name }}</li>
+        {% empty %}
+            <li>No tasks yet.</li>
+        {% endfor %}
+    </ul>
+
+</body>
+</html>
+
+
+-----------------------------------------------
+✅ Phase 4: Database Model
+
+4. Create a Task Model 🧱 
+
+In app_name/models.py:
+__________________________________________________
+from django.db import models
+
+class Task(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+__________________________________________________
+
+Then run the migrations:
+  • python manage.py makemigrations
+  • python manage.py migrate
+
+
+5. Handle Form Submission in views.py 📥 
+
+Update index() in iTaskApp/views.py:
+__________________________________________________
+from django.shortcuts import render, redirect
+from .models import Task
+
+def index(request):
+    if request.method == 'POST':
+        task_name = request.POST.get('task')
+        if task_name:
+            Task.objects.create(name=task_name)
+        return redirect('/')  # refresh the page to show new task
+
+    tasks = Task.objects.all()
+    return render(request, "iTaskApp/index.html", {"tasks": tasks})
+__________________________________________________
+
+
+6. Test It 🧪 
+
+Now go to: http://127.0.0.1:8000/ 
+
+
+🎨 🗑 ✅🎯🚀  Next: Want to Add Complete/Remove Task Functionality?
+
+
+============================================================================================
+5. Models and Databases
+
+Django uses models to define the structure of your database. 
+  • Open myapp/models.py 
+  • Define a model:
+
+_______________________________________
+from django.db import models                                     
+                                                                                                  
+class Item(models.Model):                                              
+    name = models.CharField(max_length=50)       
+    price = models.IntegerField()     
+    desc = models.TextField(blank=True, null=True) 
+    created_at = models.DateTimeField(auto_now_add =True)                                                                                     
+
+    def __str__ (self):
+        return self.name
+
+      def _str_ (self):                                                           
+           Return self.name                                                                                                                                                       
+
+
+Apply migrations to create the database table:
+  • python manage.py makemigrations
+  • python manage.py migrate
+
+
+============================================================================================
+6. Django Admin Panel
+
+Create a superuser and access the admin panel at /admin.
+  • python manage.py createsuperuser
+
+- Use Django’s admin interface to add and manage items. 
+- Register the model in admin.py :
+
+_______________________________________
+from django.contrib import admin                       
+from .models import model_name                                        
+                                                                                           
+admin.site.register(model_name)                                      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+===============================================================================
+Django-Setup - THEORY 
+-----------------------------------------------------
+
+
+Understanding Django’s Project Structure
+
+1. manage.py
+This is Django’s command-line utility. You’ll use it to run the server, create apps, and apply database migrations.
+
+2. settings.py
+This file contains your project’s configurations, such as database settings, installed apps, and middleware.
+
+3. urls.py
+This file defines the routes for your application, mapping URLs to views.
+
+4. wsgi.py/asgi.py
+These files handle server deployment and communication between your app and the web server.
+
+
+----------------------------------------------------------------------------------------------
+Understanding App Structure
+
+1. models.py: 
+Define your database structure here.
+
+2. views.py: 
+Write the logic for handling user requests and returning responses.
+Handles user requests and responses.
+
+3. urls.py: 
+Create routes for this app ( create this file manually).
+Link views to URLS in urls.py
+
+
+-----------------------------------------------
+1.1. What is a Model?
+Django uses models to define the structure of your database
+
+-----------------------------------------------
+2.1. What is a View?
+A view is a Python function that takes a web request and returns a web response.
+
+Open myapp/views.py
+_______________________________________
+from django.http import HttpResponse              
+                                                                                           
+def home(request):                                                     
+    return HttpResponse("Hello, World!")             
+
+-----------------------------------------------
+3.1. What are Urls?
+• Now, connect this view to a URL. 
+• Open myproject/urls.py 
+
+_______________________________________
+from django.urls import path                                
+from myapp import views                                      
+                                                                                         
+urlpatterns = [                                                            
+    path('home/', views.home, name='home'),	             
+]            
+
+-----------------------------------------------
+4. What is a Template?
+A template is an HTML file that lets you create dynamic web pages. 
+
+• Create a folder named templates inside your app_name directory.
+• Add a file called home.html with this content:
+
+
+• Update your view to render this template:
+
+    ->  open myapp/views.py                                        
+                    
+

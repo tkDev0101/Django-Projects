@@ -1,0 +1,67 @@
+===============================================================================
+Lael - Django Setup on Remote SSH Server 🎨 🗑 ✅🎯
+-----------------------------------------------------
+
+
+1. First SetUp Github Repo
+	- Repo is setup "virtually" on Github
+	- now clone it onto your local machine......
+	- Adding a new SSH key to your GitHub account
+		-> https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account
+
+
+2. Open up Vs Code
+	-> close Folder if any open
+	-> Welcome page -> connect to remote development workspaces
+	-> connect to Host (Remote-SSH) -> ssh tk@172.168.0.21
+	-> Open terminal -> now working in Linux
+
+
+3. Link Repo to Environment
+	-> In Linux Env on VS Code terminal
+	-> git clone.....
+
+
+----------------------------------------
+
+4. Set Up Django Environment on VS Code
+	-> https://realpython.com/django-setup/
+
+
+check python version
+ - python3 -V
+
+
+update python?
+ - sudo apt install python3.12-venv
+
+
+create virtual environment
+ - python3 -m venv env
+
+
+activate virtual environment
+ - source env/bin/activate
+
+
+check python version
+ - python -V
+
+
+Install django && Dependencies using pip
+ - python3 -m pip install django
+
+
+Add req file to ignore files?
+ - python3 -m pip install -r requirements.txt
+
+ 
+
+Set Up a Django Project
+ - django-admin startproject <project-name>
+
+
+Start a Django App
+ - python manage.py startapp <appname>
+
+
