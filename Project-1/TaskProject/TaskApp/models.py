@@ -7,6 +7,7 @@ class Task(models.Model):
         ('Low', 'Low'),
         ('Medium', 'Medium'),
         ('High', 'High'),
+        #  db  = display
     ]
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
