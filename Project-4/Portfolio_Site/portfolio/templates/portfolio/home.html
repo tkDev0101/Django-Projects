@@ -1,0 +1,76 @@
+{% extends 'portfolio/base.html' %}
+{% block title %}Home - Mthokozisi Myende{% endblock %}
+{% block content %}
+
+<!-- HERO SECTION -->
+<section class="text-center mb-5">
+    <img src="{% static 'portfolio/img/profile.jpg' %}" class="rounded-circle mb-3" alt="Profile" width="150" height="150">
+    <h1 class="display-5">Mthokozisi Myende</h1>
+    <p class="lead">Aspiring Software Developer | Passionate about Coding, Cloud & Learning</p>
+</section>
+
+<hr>
+
+<!-- ABOUT -->
+<section class="mb-5">
+    <h2>About Me</h2>
+    <p>
+        I am a responsible individual who possesses leadership qualities, communication skills, and a passion for learning and coding. I enjoy networking with people and developing new skills through hands-on experience.
+    </p>
+</section>
+
+<!-- SKILLS -->
+<section class="mb-5">
+    <h2>Skills</h2>
+    <div class="row row-cols-2 row-cols-md-3 g-3">
+        {% for skill in skills %}
+        <div class="col">
+            <div class="card shadow-sm text-center">
+                <div class="card-body">
+                    <p class="card-text">{{ skill }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- EXPERIENCE & EDUCATION -->
+<section class="mb-5">
+    <h2>Experience</h2>
+    <ul class="list-group">
+        <li class="list-group-item">
+            <strong>IT Intern – Go Four IT</strong> <br>
+            Feb 2025 – Present
+        </li>
+        <li class="list-group-item">
+            <strong>Career Centre Ambassador – IIE Varsity College</strong><br>
+            Feb 2023 – Nov 2024
+        </li>
+    </ul>
+
+    <h2 class="mt-4">Education</h2>
+    <ul class="list-group">
+        <li class="list-group-item">
+            <strong>Bachelor of Computer and Information Sciences in Application Development</strong><br>
+            IIE Varsity College, Westville (2022 – 2024)
+        </li>
+    </ul>
+</section>
+
+<!-- CERTIFICATIONS -->
+<section class="mb-5 text-center">
+    <h2>Certifications</h2>
+    <a href="https://www.linkedin.com/in/mthokozisi-myende-14215720b/details/certifications/" target="_blank" class="btn btn-outline-primary">
+        View My Certifications
+    </a>
+</section>
+
+<!-- CTA -->
+<section class="text-center">
+    <h2>Interested in Collaborating?</h2>
+    <p>Feel free to <a href="{% url 'contact' %}">contact me</a> or download my resume below.</p>
+    <a href="{% static 'portfolio/resume.pdf' %}" class="btn btn-primary" download>📄 Download Resume</a>
+</section>
+
+{% endblock %}
