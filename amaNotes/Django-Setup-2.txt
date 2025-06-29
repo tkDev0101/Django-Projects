@@ -13,7 +13,7 @@ check python version
   • python --version
 
 Create a virtual environment:
-  • python -m venv env envL envW
+  • python -m venv envL envW
   • source envL/bin/activate   ||   .\envW\Scripts\activate
 
 install Django using pip, Python’s package manager
