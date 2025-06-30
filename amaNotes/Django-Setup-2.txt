@@ -123,10 +123,10 @@ Django will look for templates inside templates/iTaskApp/ by default when using 
 
 In iTaskApp/views.py:
 __________________________________________________
-from django.shortcuts import render
-
-def index(request):
-    return render(request, "iTaskApp/index.html")
+from django.http import HttpResponse              
+                                                                                           
+def index(request):                                                     
+    return HttpResponse("Hello, World!")
 __________________________________________________
 
 
