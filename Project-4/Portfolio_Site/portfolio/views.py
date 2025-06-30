@@ -10,21 +10,6 @@ def contact(request):
     return render(request, 'portfolio/contact.html')
 
 
-
-# def home(request):
-#     skills = [
-#         "Python", "Java", "C#", "Linux Basics", "Windows Server Basics", 
-#         "Networking Basics", "Problem Solving","Troubleshooting", 
-#         "Git & GitHub", "Shell Scripting (Bash)", "Azure Fundamentals",
-#         "Planning & Organizing", "Communication", "Teamwork", "Adaptability"
-#     ]
-
-#     context = {
-#         'skills': skills
-#     }
-
-#     return render(request, 'portfolio/home.html', context)
-
 def home(request):
 
     skills = [
