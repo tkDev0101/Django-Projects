@@ -26,3 +26,5 @@ class QRCode(models.Model):
             qr.save(buffer, format='PNG')
             self.qr_image.save(f'qr_{self.code}.png', File(buffer), save=False)
         super().save(*args, **kwargs)
+
+
